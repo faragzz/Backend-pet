@@ -5,10 +5,12 @@ import {AuthModule} from './auth/auth.module';
 import {UsersModule} from './users/users.module';
 import {ConfigModule} from '@nestjs/config';
 import {MongooseModule} from "@nestjs/mongoose";
+import { EmailModule } from './email/email.module';
 
 @Module({
     imports: [ConfigModule.forRoot({isGlobal: true}), AuthModule, UsersModule,
-        MongooseModule.forRoot('mongodb://localhost/test')],
+        MongooseModule.forRoot('mongodb://localhost/test'),
+        EmailModule],
     controllers: [AppController],
     providers: [AppService],
 })

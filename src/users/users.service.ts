@@ -21,7 +21,7 @@ export class UsersService {
   }
 
   async findAll(): Promise<User[]> {
-    return await this.userModel.find();
+    return this.userModel.find();
   }
 
   async deleteAll(): Promise<void> {
