@@ -7,11 +7,14 @@ import { AuthGuard } from './auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EmailModule } from '../email/email.module';
+import { User, UserSchema } from '../users/schema/user.schema';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
 
   imports: [UsersModule,
     EmailModule,
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

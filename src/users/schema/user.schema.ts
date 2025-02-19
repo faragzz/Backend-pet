@@ -12,6 +12,9 @@ export class User {
     @Prop({ required: true })
     username: string;
 
+    @Prop({ required: true })
+    phone: string;
+
     @Prop({ required: true, unique: true })
     email: string;
 
@@ -23,6 +26,12 @@ export class User {
 
     @Prop({ type: String, default: null })
     refreshToken: string | null;
+
+    @Prop({ type: String, default: null })
+    otp: string | null;
+
+    @Prop({ type: String, default: null })
+    otp_key: string | null;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

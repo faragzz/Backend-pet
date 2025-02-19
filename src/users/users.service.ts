@@ -34,7 +34,12 @@ export class UsersService {
     user.refreshToken = refreshToken;
     return user;
   }
-
+  async updatePassword(email: string, password: string): Promise<User | null> {
+    const user = await this.userModel.findOne({ email });
+    if (!user) return null;
+    user.password = await bcrypt.hash(password, 10);
+    return user;
+  }
   async logout(email: string) {
     const user = await this.userModel.findOne({ email });
     if (!user) return null;

@@ -1,32 +1,39 @@
-import {IsString, IsEmail, IsDate, IsOptional} from 'class-validator';
-import {Type} from 'class-transformer';
+import { IsString, IsEmail, IsDate, IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
 
 type Role = 'admin' | 'user';
 
 class UserDTO {
-    @IsString()
-    username: string;
+  @IsString()
+  username: string;
 
-    @IsEmail()
-    email: string;
+  @IsEmail()
+  email: string;
 
-    @IsString()
-    password: string;
+  @IsString()
+  password: string;
 
-    @IsString()
-    role: Role;
+  @IsString()
+  phone: string;
 
-    @IsOptional()
-    @IsString()
-    refreshToken: string | null;
+  @IsString()
+  role: Role;
 
-    @Type(() => Date)
-    @IsDate()
-    createdAt: Date;
+  @IsOptional()
+  @IsString()
+  refreshToken: string | null;
 
-    @Type(() => Date)
-    @IsDate()
-    updatedAt: Date;
+  @IsOptional()
+  @IsString()
+  otp: string | null;
+
+  @Type(() => Date)
+  @IsDate()
+  createdAt: Date;
+
+  @Type(() => Date)
+  @IsDate()
+  updatedAt: Date;
 }
 
-export {UserDTO};
+export { UserDTO };
