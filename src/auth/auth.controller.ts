@@ -1,12 +1,14 @@
-import {Body, Controller, Post, Request, HttpCode, HttpStatus, UseGuards, Get} from '@nestjs/common';
+import {Body, Controller, Post, Request, HttpCode, HttpStatus, Get, Delete} from '@nestjs/common';
 import {AuthService} from './auth.service';
-import {AuthGuard} from "./auth.guard";
 import {Public} from "../../Guards/guards";
-import {User} from "../users/type";
+import {UserDTO} from "../users/dto/user";
+import {UsersService} from "../users/users.service";
+import {User} from '../users/schema/user.schema';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private authService: AuthService) {
+    constructor(private authService: AuthService,
+                private userService: UsersService) {
     }
 
     @Public()
@@ -15,21 +17,36 @@ export class AuthController {
     signIn(@Body() signInDto: Record<string, string>) {
         return this.authService.signIn(signInDto.email, signInDto.password);
     }
+
     @Public()
     @HttpCode(HttpStatus.OK)
     @Post('register')
-    register(@Body() user: User) {
+    register(@Body() user: UserDTO):Promise<User> {
         return this.authService.register(user);
     }
 
+    @Public()
+    @HttpCode(HttpStatus.OK)
+    @Get('users')
+    getAll() {
+        return this.userService.findAll();
+    }
+    @Public()
+    @HttpCode(HttpStatus.OK)
+    @Delete('delete-all')
+    async deleteAll() {
+        return this.userService.deleteAll();
+    }
     @Post('refreshToken')
     async refresh(@Body() body: { refreshToken: string }) {
         return this.authService.refreshTokens(body.refreshToken);
     }
+
     @Post('logout')
     async logout(@Body() body: { userId: string }) {
         return this.authService.logout(body.userId);
     }
+
     @Get('profile')
     getProfile(@Request() req) {
         return req.user;
