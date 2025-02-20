@@ -98,44 +98,68 @@ export class AuthService {
     }
   }
 
-  async generateOTP(email:string){
+  async generateOTP(email: string) {
     const secret = speakeasy.generateSecret({ length: 20 });
     const token = speakeasy.totp({
       secret: secret.base32,
       encoding: 'base32',
+      step: 60,
     });
+
     const user = await this.userModel.findOne({ email });
-    if (!user) return null;
+    if (!user) {
+      console.error("User not found.");
+      return { error: "User not found" };
+    }
     user.otp_key = secret.base32;
     await user.save();
-    //sent mail
+
     try {
       await this.mailService.sendMail(
         user.email,
         "Recover your Pet's Account",
-        `OTP : ${token}`,
+        `OTP: ${token}`
       );
     } catch (error) {
-      console.error("⚠️ Failed to send OTP to Email:", error.message);
+      console.error("⚠️ Failed to send OTP:", error.message);
     }
+
+    return { message: "OTP sent successfully" };
   }
 
-  async verifyOTP(email:string , token:string){
+  async verifyOTP(email: string, token: string) {
     const user = await this.userModel.findOne({ email });
-    if (!user) return null;
-    const secret = user.otp_key;
-    const verified = speakeasy.totp.verify({
-      secret,
-      encoding: 'base32',
+    if (!user) {
+      console.error("User not found.");
+      return { error: "User not found" };
+    }
+
+    if (!user.otp_key) {
+      console.error("OTP key missing.");
+      return { error: "No OTP key found for user" };
+    }
+    const verified = speakeasy.totp.verifyDelta({
+      secret: user.otp_key,
+      encoding: "base32",
       token,
-      window: 1,
+      window: 2,
+      step: 60
     });
-    if(!verified)return null;
+
+    if (!verified) {
+      console.error("❌ Invalid OTP.");
+      return { error: "Invalid or expired OTP" };
+    }
+
+    // Generate tokens if OTP is valid
     const access_token = this.generateAccessToken(user);
     const refresh_token = this.generateRefreshToken(user);
+
     await this.updateRefreshToken(user.email, refresh_token);
+
     return { access_token, refresh_token };
   }
+
 
   async logout(userId: string) {
     return this.usersService.logout(userId);

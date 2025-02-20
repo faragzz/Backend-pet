@@ -28,9 +28,6 @@ export class User {
     refreshToken: string | null;
 
     @Prop({ type: String, default: null })
-    otp: string | null;
-
-    @Prop({ type: String, default: null })
     otp_key: string | null;
 }
 
