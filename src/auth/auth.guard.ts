@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Request } from 'express';
+import { Request as ExpressRequest } from 'express'; // ✅ Ensure correct Express type
 import { IS_PUBLIC_KEY } from "../../Guards/guards";
 import { Reflector } from "@nestjs/core";
 
@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
             return true;
         }
 
-        const request = context.switchToHttp().getRequest<Request>(); // ✅ Explicitly type the request
+        const request = context.switchToHttp().getRequest<ExpressRequest>(); // ✅ Use ExpressRequest type
         const token = this.extractTokenFromHeader(request);
         if (!token) {
             throw new UnauthorizedException();
@@ -29,15 +29,15 @@ export class AuthGuard implements CanActivate {
                   secret: process.env.JWT_SECRET
               }
             );
-            request['user'] = payload;
+            (request as any).user = payload; // ✅ Use type assertion to avoid strict type errors
         } catch {
             throw new UnauthorizedException();
         }
         return true;
     }
 
-    private extractTokenFromHeader(request: Request): string | undefined {
-        const authHeader = request.headers.authorization; // ✅ Ensure request type is Express Request
+    private extractTokenFromHeader(request: ExpressRequest): string | undefined {
+        const authHeader = request.headers?.authorization; // ✅ Safe access to headers
         if (!authHeader) return undefined;
 
         const [type, token] = authHeader.split(' ');
