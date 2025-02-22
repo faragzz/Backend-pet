@@ -27,10 +27,12 @@ class UserDTO {
   @IsString()
   otp: string | null;
 
+  @IsOptional()
   @Type(() => Date)
   @IsDate()
   createdAt: Date;
 
+  @IsOptional()
   @Type(() => Date)
   @IsDate()
   updatedAt: Date;

@@ -1,18 +1,22 @@
-import {Module} from '@nestjs/common';
-import {AppController} from './app.controller';
-import {AppService} from './app.service';
-import {AuthModule} from './auth/auth.module';
-import {UsersModule} from './users/users.module';
-import {ConfigModule} from '@nestjs/config';
-import {MongooseModule} from "@nestjs/mongoose";
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { ConfigModule } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
 import { EmailModule } from './email/email.module';
 
 @Module({
-    imports: [ConfigModule.forRoot({isGlobal: true}), AuthModule, UsersModule,
-        MongooseModule.forRoot('mongodb://localhost/test'),
-        EmailModule],
-    controllers: [AppController],
-    providers: [AppService],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), AuthModule, UsersModule,
+    MongooseModule.forRoot(process.env.NODE_ENV === 'development'
+      ? 'mongodb://localhost/test'
+      : process.env.MANGODB_CONNECTION_STRING ?? (() => {
+      throw new Error('MONGODB_CONNECTION_STRING is not defined!');
+    })()),
+    EmailModule],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {
 }
