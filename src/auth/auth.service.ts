@@ -47,7 +47,6 @@ export class AuthService {
     return createdUser;
   }
 
-
   private generateAccessToken(user: any) {
     return this.jwtService.sign(
       { sub: user.id, username: user.username },

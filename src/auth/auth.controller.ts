@@ -4,6 +4,11 @@ import { Public } from '../../Guards/guards';
 import { UserDTO } from '../users/dto/user';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/schema/user.schema';
+import { SignInDTO } from './dto/signInDTO';
+import { GenerateOtpDTO } from './dto/generateOTP';
+import { RefreshDTO } from './dto/refresh';
+import { VerifyOtpDTO } from './dto/verifyOTP';
+import { logoutDTO } from './dto/logout';
 
 @Controller('auth')
 export class AuthController {
@@ -15,13 +20,13 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Get('hello')
   hello() {
-    return "Helloz";
+    return 'Helloz';
   }
 
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() signInDto: Record<string, string>) {
+  signIn(@Body() signInDto: SignInDTO) {
     return this.authService.signIn(signInDto.email, signInDto.password);
   }
 
@@ -49,30 +54,30 @@ export class AuthController {
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('generate-otp')
-  async generateOTP(@Body() body: { email: string }) {
+  async generateOTP(@Body() body: GenerateOtpDTO) {
     return this.authService.generateOTP(body.email);
   }
 
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('verify-otp')
-  async verifyOTP(@Body() body: { email: string, token: string }) {
-    return this.authService.verifyOTP(body.email,body.token);
+  async verifyOTP(@Body() body:VerifyOtpDTO) {
+    return this.authService.verifyOTP(body.email, body.token);
   }
 
   @Post('update-password')
-  async updatePassword(@Body() body: { email: string, password: string }) {
+  async updatePassword(@Body() body: SignInDTO) {
     return this.userService.updatePassword(body.email, body.password);
   }
 
 
   @Post('refreshToken')
-  async refresh(@Body() body: { refreshToken: string }) {
+  async refresh(@Body() body: RefreshDTO) {
     return this.authService.refreshTokens(body.refreshToken);
   }
 
   @Post('logout')
-  async logout(@Body() body: { userId: string }) {
+  async logout(@Body() body:logoutDTO) {
     return this.authService.logout(body.userId);
   }
 
