@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
             return true;
         }
 
-        const request = context.switchToHttp().getRequest<Request>(); // ✅ Explicitly set Express Request type
+        const request = context.switchToHttp().getRequest<Request>();
         const token = this.extractTokenFromHeader(request);
         if (!token) {
             throw new UnauthorizedException();
@@ -27,7 +27,7 @@ export class AuthGuard implements CanActivate {
               token,
               { secret: process.env.JWT_SECRET }
             );
-            (request as any).user = payload; // ✅ Type assertion to bypass Express strict types
+            (request as any).user = payload;
         } catch {
             throw new UnauthorizedException();
         }
@@ -35,7 +35,7 @@ export class AuthGuard implements CanActivate {
     }
 
     private extractTokenFromHeader(request: any): string | undefined {
-        const authHeader = request.headers?.authorization; // ✅ Safe access to headers
+        const authHeader = request.headers?.authorization;
         if (!authHeader) return undefined;
 
         const [type, token] = authHeader.split(' ');
