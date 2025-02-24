@@ -6,6 +6,8 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { EmailModule } from './email/email.module';
+import { PostsModule } from './posts/posts.module';
+import { PetModule } from './pet/pet.module';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }), AuthModule, UsersModule,
@@ -14,7 +16,9 @@ import { EmailModule } from './email/email.module';
       : process.env.MANGODB_CONNECTION_STRING ?? (() => {
       throw new Error('MONGODB_CONNECTION_STRING is not defined!');
     })()),
-    EmailModule],
+    EmailModule,
+    PostsModule,
+    PetModule],
   controllers: [AppController],
   providers: [AppService],
 })
