@@ -1,8 +1,4 @@
 import { BadRequestException, Body, Controller, Get, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
-import { Express } from 'express';
 import { Public } from '../../Guards/guards';
 import { CreatePetDto } from './dto/create.dto';
 import { PetService } from './pet.service';
@@ -18,23 +14,8 @@ export class PetController {
   constructor(private readonly petService: PetService) {
   }
 
-  // @Post('create')
-  // @UseInterceptors(
-  //   FileInterceptor('photo', {
-  //     storage: diskStorage({
-  //       destination: './uploads',
-  //       filename: (req, file, cb) => {
-  //         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-  //         cb(null, file.fieldname + '-' + uniqueSuffix + extname(file.originalname));
-  //       },
-  //     }),
-  //   }),
-  // )
-  // create(@UploadedFile() file: Express.Multer.File, @Body('data') body: CreatePetDto) {
-  //   return this.petService.create(body, file);
-  // }
 
-  // @Post('create')
+  @Post('create')
   // @UseInterceptors(
   //   FileInterceptor('photo', {
   //     storage: diskStorage({
@@ -46,27 +27,11 @@ export class PetController {
   //     }),
   //   }),
   // )
-  // async create(
-  //   @UploadedFile() file: Express.Multer.File,
-  //   @Body('data') body: string,
-  // ) {
-  //   let petData: CreatePetDto;
-  //   try {
-  //     petData = JSON.parse(body);
-  //   } catch (error) {
-  //     throw new BadRequestException('Invalid JSON format');
-  //   }
-  //
-  //   // Transform and validate the DTO
-  //   const petDto = plainToInstance(CreatePetDto, petData);
-  //   const errors = await validate(petDto);
-  //
-  //   if (errors.length > 0) {
-  //     throw new BadRequestException(errors);
-  //   }
-  //
-  //   return this.petService.create(petDto, file);
-  // }
+  async create(
+    @Body() body: CreatePetDto,
+  ) {
+    return this.petService.create(body);
+  }
 
 
   @Public()

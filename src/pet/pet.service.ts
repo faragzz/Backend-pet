@@ -11,17 +11,9 @@ export class PetService {
   constructor(@InjectModel(Pet.name) private readonly petModel: Model<PetDocument>) {
   }
 
-  async create(pet: CreatePetDto, file: Express.Multer.File): Promise<Pet & {
-    message: string,
-    filePath: string
-  } | null> {
+  async create(pet: CreatePetDto): Promise<Pet | null> {
     const data = new this.petModel(pet);
-    await data.save();
-    return {
-      ...data.toObject(),
-      message: 'File uploaded successfully',
-      filePath: `/uploads/${file.filename}`,
-    };
+    return data.save();
   }
 
   async findAll(page: number = 1, limit: number = 10): Promise<{
