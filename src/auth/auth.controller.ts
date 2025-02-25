@@ -1,14 +1,15 @@
-import { Body, Controller, Post, Request, HttpCode, HttpStatus, Get, Delete } from '@nestjs/common';
+import { Body, Controller, Post, Request, HttpCode, HttpStatus, Get, Delete, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from '../../Guards/guards';
 import { UserDTO } from '../users/dto/user';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/schema/user.schema';
-import { SignInDTO } from './dto/signInDTO';
-import { GenerateOtpDTO } from './dto/generateOTP';
-import { RefreshDTO } from './dto/refresh';
-import { VerifyOtpDTO } from './dto/verifyOTP';
-import { logoutDTO } from './dto/logout';
+import { SignInDTO } from './dto/signInDTO.dto';
+import { GenerateOtpDTO } from './dto/generateOTP.dto';
+import { RefreshDTO } from './dto/refresh.dto';
+import { VerifyOtpDTO } from './dto/verifyOTP.dto';
+import { logoutDTO } from './dto/logout.dto';
+import { FindAllUserDto } from '../users/dto/findAll.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -40,8 +41,8 @@ export class AuthController {
   @Public()
   @HttpCode(HttpStatus.OK)
   @Get('users')
-  getAll() {
-    return this.userService.findAll();
+  getAll(@Query() query: FindAllUserDto) {
+    return this.userService.findAll(query.page, query.limit);
   }
 
   @Public()
@@ -61,7 +62,7 @@ export class AuthController {
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('verify-otp')
-  async verifyOTP(@Body() body:VerifyOtpDTO) {
+  async verifyOTP(@Body() body: VerifyOtpDTO) {
     return this.authService.verifyOTP(body.email, body.token);
   }
 
@@ -77,7 +78,7 @@ export class AuthController {
   }
 
   @Post('logout')
-  async logout(@Body() body:logoutDTO) {
+  async logout(@Body() body: logoutDTO) {
     return this.authService.logout(body.userId);
   }
 

@@ -20,9 +20,23 @@ export class UsersService {
     return await newUser.save();
   }
 
-  async findAll(): Promise<User[]> {
-    return this.userModel.find();
+  async findAll(page: number = 1, limit: number = 10): Promise<{
+    data: User[];
+    page: number;
+    total: number;
+    totalPages: number;
+  }> {
+    const skip = (page - 1) * limit;
+    const total = await this.userModel.countDocuments();
+    const data = await this.userModel.find().skip(skip).limit(limit).exec();
+    return {
+      data,
+      page,
+      total,
+      totalPages: Math.ceil(total / limit),
+    };
   }
+
 
   async deleteAll(): Promise<void> {
     await this.userModel.deleteMany();
