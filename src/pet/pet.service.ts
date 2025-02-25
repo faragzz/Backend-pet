@@ -24,8 +24,21 @@ export class PetService {
     };
   }
 
-  async findAll(): Promise<Pet[]> {
-    return this.petModel.find().exec();
+  async findAll(page: number = 1, limit: number = 10): Promise<{
+    data: Pet[],
+    page: number,
+    total: number,
+    totalPages: number
+  }> {
+    const skip = (page - 1) * limit;
+    const total = await this.petModel.countDocuments();
+    const data = await this.petModel.find().skip(skip).limit(limit).exec();
+    return {
+      data,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async findOne(id: string): Promise<Pet | null> {

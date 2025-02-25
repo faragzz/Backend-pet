@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
@@ -8,6 +8,7 @@ import { CreatePetDto } from './dto/create';
 import { PetService } from './pet.service';
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
+import { FindAllPetsDto } from './dto/findAll.dto';
 
 @Controller('pet')
 export class PetController {
@@ -44,7 +45,7 @@ export class PetController {
   )
   async create(
     @UploadedFile() file: Express.Multer.File,
-    @Body('data') body: string
+    @Body('data') body: string,
   ) {
     let petData: CreatePetDto;
     try {
@@ -66,9 +67,9 @@ export class PetController {
 
 
   @Public()
-  @Post('findAll')
-  findAll() {
-    return this.petService.findAll();
+  @Get('findAll')
+  findAll(@Query() query: FindAllPetsDto) {
+    return this.petService.findAll(query.page, query.limit);
   }
 
   @Post('findOne')
