@@ -1,14 +1,36 @@
-import { Body, Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { Express } from 'express';
 import { Public } from '../../Guards/guards';
+import { CreatePetDto } from './dto/create';
+import { PetService } from './pet.service';
+import { validate } from 'class-validator';
+import { plainToInstance } from 'class-transformer';
 
 @Controller('pet')
 export class PetController {
-  @Public()
-  @Post('upload')
+  constructor(private readonly petService: PetService) {
+  }
+
+  // @Post('create')
+  // @UseInterceptors(
+  //   FileInterceptor('photo', {
+  //     storage: diskStorage({
+  //       destination: './uploads',
+  //       filename: (req, file, cb) => {
+  //         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+  //         cb(null, file.fieldname + '-' + uniqueSuffix + extname(file.originalname));
+  //       },
+  //     }),
+  //   }),
+  // )
+  // create(@UploadedFile() file: Express.Multer.File, @Body('data') body: CreatePetDto) {
+  //   return this.petService.create(body, file);
+  // }
+
+  @Post('create')
   @UseInterceptors(
     FileInterceptor('photo', {
       storage: diskStorage({
@@ -20,10 +42,47 @@ export class PetController {
       }),
     }),
   )
-  uploadFile(@UploadedFile() file: Express.Multer.File, @Body() body: any) {
-    return {
-      message: 'File uploaded successfully',
-      filePath: `/uploads/${file.filename}`,
-    };
+  async create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('data') body: string
+  ) {
+    let petData: CreatePetDto;
+    try {
+      petData = JSON.parse(body);
+    } catch (error) {
+      throw new BadRequestException('Invalid JSON format');
+    }
+
+    // Transform and validate the DTO
+    const petDto = plainToInstance(CreatePetDto, petData);
+    const errors = await validate(petDto);
+
+    if (errors.length > 0) {
+      throw new BadRequestException(errors);
+    }
+
+    return this.petService.create(petDto, file);
+  }
+
+
+  @Public()
+  @Post('findAll')
+  findAll() {
+    return this.petService.findAll();
+  }
+
+  @Post('findOne')
+  findOne(@Body() body: { id: string }) {
+    return this.petService.findOne(body.id);
+  }
+
+  @Post('update')
+  update(@Body() body: { id: string, pet: CreatePetDto }) {
+    return this.petService.update(body.id, body.pet);
+  }
+
+  @Post('delete')
+  delete(@Body() body: { id: string }) {
+    return this.petService.delete(body.id);
   }
 }

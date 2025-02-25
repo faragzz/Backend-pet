@@ -8,6 +8,9 @@ export class Pet {
   _id: MongooseSchema.Types.ObjectId;
 
   @Prop({ required: true })
+  ownerId: string;
+
+  @Prop({ required: true })
   name: string;
 
   @Prop({ required: true })
