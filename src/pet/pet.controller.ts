@@ -4,11 +4,14 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { Express } from 'express';
 import { Public } from '../../Guards/guards';
-import { CreatePetDto } from './dto/create';
+import { CreatePetDto } from './dto/create.dto';
 import { PetService } from './pet.service';
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { FindAllPetsDto } from './dto/findAll.dto';
+import { FindOneDto } from './dto/findOne.dto';
+import { DeleteDto } from './dto/delete.dto';
+import { UpdatePetDto } from './dto/update.dto';
 
 @Controller('pet')
 export class PetController {
@@ -73,17 +76,17 @@ export class PetController {
   }
 
   @Post('findOne')
-  findOne(@Body() body: { id: string }) {
+  findOne(@Body() body: FindOneDto) {
     return this.petService.findOne(body.id);
   }
 
   @Post('update')
-  update(@Body() body: { id: string, pet: CreatePetDto }) {
+  update(@Body() body: UpdatePetDto) {
     return this.petService.update(body.id, body.pet);
   }
 
   @Post('delete')
-  delete(@Body() body: { id: string }) {
+  delete(@Body() body: DeleteDto) {
     return this.petService.delete(body.id);
   }
 }
