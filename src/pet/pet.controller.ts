@@ -34,39 +34,39 @@ export class PetController {
   //   return this.petService.create(body, file);
   // }
 
-  @Post('create')
-  @UseInterceptors(
-    FileInterceptor('photo', {
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (req, file, cb) => {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-          cb(null, file.fieldname + '-' + uniqueSuffix + extname(file.originalname));
-        },
-      }),
-    }),
-  )
-  async create(
-    @UploadedFile() file: Express.Multer.File,
-    @Body('data') body: string,
-  ) {
-    let petData: CreatePetDto;
-    try {
-      petData = JSON.parse(body);
-    } catch (error) {
-      throw new BadRequestException('Invalid JSON format');
-    }
-
-    // Transform and validate the DTO
-    const petDto = plainToInstance(CreatePetDto, petData);
-    const errors = await validate(petDto);
-
-    if (errors.length > 0) {
-      throw new BadRequestException(errors);
-    }
-
-    return this.petService.create(petDto, file);
-  }
+  // @Post('create')
+  // @UseInterceptors(
+  //   FileInterceptor('photo', {
+  //     storage: diskStorage({
+  //       destination: './uploads',
+  //       filename: (req, file, cb) => {
+  //         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+  //         cb(null, file.fieldname + '-' + uniqueSuffix + extname(file.originalname));
+  //       },
+  //     }),
+  //   }),
+  // )
+  // async create(
+  //   @UploadedFile() file: Express.Multer.File,
+  //   @Body('data') body: string,
+  // ) {
+  //   let petData: CreatePetDto;
+  //   try {
+  //     petData = JSON.parse(body);
+  //   } catch (error) {
+  //     throw new BadRequestException('Invalid JSON format');
+  //   }
+  //
+  //   // Transform and validate the DTO
+  //   const petDto = plainToInstance(CreatePetDto, petData);
+  //   const errors = await validate(petDto);
+  //
+  //   if (errors.length > 0) {
+  //     throw new BadRequestException(errors);
+  //   }
+  //
+  //   return this.petService.create(petDto, file);
+  // }
 
 
   @Public()
