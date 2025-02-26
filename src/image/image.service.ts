@@ -7,20 +7,30 @@ export class ImageService {
   private imagekit: ImageKit;
 
   constructor() {
+    const publicKey = process.env.ImagePublic;
+    const privateKey = process.env.ImagePrivate;
+    const urlEndpoint = process.env.ImageUrlEndpoint;
+
+    if (!publicKey || !privateKey || !urlEndpoint) {
+      throw new Error("Missing required ImageKit environment variables.");
+    }
+
     this.imagekit = new ImageKit({
-      publicKey: 'public_MMUPxtwhba4PDkEpELbrWw6Xg+c=',
-      privateKey: 'private_Iz402t+LnkwrsMvzHSbhxwr6d/8=',
-      urlEndpoint: 'https://ik.imagekit.io/dlwvbwjkbw',
+      publicKey,
+      privateKey,
+      urlEndpoint,
     });
   }
 
-  async uploadFile(file: Buffer, fileName: string, folder: string):Promise<UploadResponse> {
+
+  async uploadFile(file: Buffer, fileName: string, folder: string): Promise<UploadResponse> {
     return this.imagekit.upload({
       file,
       fileName,
       folder,
     });
   }
+
   async deleteFile(fileId: string): Promise<{ success: boolean; message?: string }> {
     try {
       await this.imagekit.deleteFile(fileId);
