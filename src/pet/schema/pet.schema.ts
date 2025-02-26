@@ -11,6 +11,9 @@ export class Pet {
   ownerId: string;
 
   @Prop({ required: true })
+  fileId: string;
+
+  @Prop({ required: true })
   name: string;
 
   @Prop({ required: true })

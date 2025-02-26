@@ -8,7 +8,6 @@ export class ImageController {
   constructor(private readonly imageService: ImageService) {
   }
 
-  @Public()
   @Post()
   @UseInterceptors(FileInterceptor('file')) // 'file' should match the form field name
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
@@ -23,7 +22,6 @@ export class ImageController {
     );
   }
 
-  @Public()
   @Delete(':fileId')
   async deleteImage(@Param('fileId') fileId: string) {
     return this.imageService.deleteFile(fileId);

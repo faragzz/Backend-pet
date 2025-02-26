@@ -6,6 +6,9 @@ class CreatePetDto {
   ownerId: string;
 
   @IsString()
+  fileId: string;
+
+  @IsString()
   name: string;
 
   @IsNumber()
