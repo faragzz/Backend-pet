@@ -1,9 +1,7 @@
-import { BadRequestException, Body, Controller, Get, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { Public } from '../../Guards/guards';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Public } from '../auth/guards/guards';
 import { CreatePetDto } from './dto/create.dto';
 import { PetService } from './pet.service';
-import { validate } from 'class-validator';
-import { plainToInstance } from 'class-transformer';
 import { FindAllPetsDto } from './dto/findAll.dto';
 import { FindOneDto } from './dto/findOne.dto';
 import { DeleteDto } from './dto/delete.dto';
@@ -16,17 +14,6 @@ export class PetController {
 
 
   @Post('create')
-  // @UseInterceptors(
-  //   FileInterceptor('photo', {
-  //     storage: diskStorage({
-  //       destination: './uploads',
-  //       filename: (req, file, cb) => {
-  //         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-  //         cb(null, file.fieldname + '-' + uniqueSuffix + extname(file.originalname));
-  //       },
-  //     }),
-  //   }),
-  // )
   async create(
     @Body() body: CreatePetDto,
   ) {

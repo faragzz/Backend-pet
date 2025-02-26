@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Request } from 'express'; // ✅ Use Express.Request explicitly
-import { IS_PUBLIC_KEY } from "../../Guards/guards";
+import { Request } from 'express';
+import { IS_PUBLIC_KEY } from "./guards/guards";
 import { Reflector } from "@nestjs/core";
 
 @Injectable()

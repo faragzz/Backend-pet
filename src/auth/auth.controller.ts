@@ -1,6 +1,6 @@
 import { Body, Controller, Post, Request, HttpCode, HttpStatus, Get, Delete, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Public } from '../../Guards/guards';
+import { Public } from './guards/guards';
 import { UserDTO } from '../users/dto/user';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/schema/user.schema';

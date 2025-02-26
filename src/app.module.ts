@@ -8,6 +8,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { EmailModule } from './email/email.module';
 import { PostsModule } from './posts/posts.module';
 import { PetModule } from './pet/pet.module';
+import { ImageModule } from './image/image.module';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }), AuthModule, UsersModule,
@@ -18,7 +19,8 @@ import { PetModule } from './pet/pet.module';
     })()),
     EmailModule,
     PostsModule,
-    PetModule],
+    PetModule,
+    ImageModule],
   controllers: [AppController],
   providers: [AppService],
 })
