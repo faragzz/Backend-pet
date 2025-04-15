@@ -1,29 +1,45 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
+import { HydratedDocument, Schema as MongooseSchema, Types } from 'mongoose';
+import { Pet } from '../../pet/schema/pet.schema';
+
 export type PostDocument = HydratedDocument<Post>;
 
 @Schema({ timestamps: true })
 export class Post {
   @Prop({ type: MongooseSchema.Types.ObjectId, auto: true })
-  _id: MongooseSchema.Types.ObjectId;
+  _id: Types.ObjectId;
 
-  @Prop({ required: true })
-  ownerId: string;
+  @Prop({ required: true, type: MongooseSchema.Types.ObjectId, ref: 'Pet' })
+  petData: Pet;
 
   @Prop({ required: true })
   title: string;
 
   @Prop({ required: true })
-  discretion: string;
+  description: string;
 
-  @Prop({ type: Number, required: true })
-  lat: number;
+  @Prop({
+    type: {
+      type: String,
+      enum: ['Point'],
+      required: true,
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+      validate: {
+        validator: (val: number[]) => val.length === 2,
+        message: 'Coordinates must be a [longitude, latitude] array',
+      },
+    },
+  })
+  location: {
+    type: 'Point';
+    coordinates: [number, number];
+  };
 
-  @Prop({ type: Number, required: true })
-  lng: number;
-
-  @Prop({ required: true })
-  price: string;
+  @Prop({ type: [String], default: [] })
+  matches: string[];
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);
