@@ -8,11 +8,10 @@ import {
   IsIn,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { CreatePetDto } from '../../pet/dto/create.dto';
 
 class LocationDto {
   @IsString()
-  @IsIn(['Point']) // Only allow 'Point'
+  @IsIn(['Point'])
   type: 'Point';
 
   @IsArray()
@@ -21,16 +20,14 @@ class LocationDto {
 }
 
 class CreatePostDto {
-  @IsDefined()
-  @ValidateNested()
-  @Type(() => CreatePetDto)
-  pet: CreatePetDto;
+  @IsString()
+  petId: string;
+
+  @IsString()
+  userId: string;
 
   @IsString()
   title: string;
-
-  @IsString()
-  name: string;
 
   @IsString()
   description: string;
