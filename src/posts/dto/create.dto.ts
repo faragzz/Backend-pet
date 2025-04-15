@@ -1,16 +1,23 @@
-import { IsString, IsNumber, IsArray, ArrayNotEmpty, ValidateNested, IsDefined, IsOptional } from 'class-validator';
-import { Pet } from '../../pet/schema/pet.schema';
+import {
+  IsString,
+  IsNumber,
+  IsArray,
+  ValidateNested,
+  IsDefined,
+  IsOptional,
+  IsIn,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreatePetDto } from '../../pet/dto/create.dto';
 
 class LocationDto {
   @IsString()
+  @IsIn(['Point']) // Only allow 'Point'
   type: 'Point';
 
   @IsArray()
-  @ArrayNotEmpty()
   @IsNumber({}, { each: true })
-  coordinates: [number, number];
+  coordinates: number[];
 }
 
 class CreatePostDto {
