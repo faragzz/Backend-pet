@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsArray, ArrayNotEmpty, ValidateNested, IsDefined } from 'class-validator';
+import { IsString, IsNumber, IsArray, ArrayNotEmpty, ValidateNested, IsDefined, IsOptional } from 'class-validator';
 import { Pet } from '../../pet/schema/pet.schema';
 import { Type } from 'class-transformer';
 import { CreatePetDto } from '../../pet/dto/create.dto';
@@ -25,10 +25,9 @@ class CreatePostDto {
   coordinates: number[];
 
   @IsArray()
-  @ArrayNotEmpty()
   @IsString({ each: true })
-  matches: string[];
-
+  @IsOptional()
+  matches?: string[];
 }
 
 export { CreatePostDto };
