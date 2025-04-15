@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Schema as MongooseSchema, Types } from 'mongoose';
-import { Pet } from '../../pet/schema/pet.schema';
 
 export type PostDocument = HydratedDocument<Post>;
 
@@ -9,8 +8,11 @@ export class Post {
   @Prop({ type: MongooseSchema.Types.ObjectId, auto: true })
   _id: Types.ObjectId;
 
-  @Prop({ required: true, type: MongooseSchema.Types.ObjectId, ref: 'Pet' })
-  pet: Pet;
+  @Prop({ required: true })
+  petId: string;
+
+  @Prop({ required: true })
+  userId: string;
 
   @Prop({ required: true })
   title: string;
