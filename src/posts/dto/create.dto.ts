@@ -3,8 +3,17 @@ import { Pet } from '../../pet/schema/pet.schema';
 import { Type } from 'class-transformer';
 import { CreatePetDto } from '../../pet/dto/create.dto';
 
-class CreatePostDto {
+class LocationDto {
+  @IsString()
+  type: 'Point';
 
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsNumber({}, { each: true })
+  coordinates: [number, number];
+}
+
+class CreatePostDto {
   @IsDefined()
   @ValidateNested()
   @Type(() => CreatePetDto)
@@ -19,10 +28,10 @@ class CreatePostDto {
   @IsString()
   description: string;
 
-  @IsArray()
-  @ArrayNotEmpty()
-  @IsNumber({}, { each: true })
-  coordinates: number[];
+  @IsDefined()
+  @ValidateNested()
+  @Type(() => LocationDto)
+  location: LocationDto;
 
   @IsArray()
   @IsString({ each: true })
