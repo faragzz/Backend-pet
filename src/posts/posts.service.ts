@@ -17,4 +17,20 @@ export class PostsService {
   async delete(id: string): Promise<Post | null> {
     return this.postModel.findByIdAndDelete(id).exec();
   }
+
+  async getPostsNearby(lat: number, lng: number, radius: number): Promise<Post[]> {
+    const posts = await this.postModel.find({
+      location: {
+        $near: {
+          $geometry: {
+            type: 'Point',
+            coordinates: [lng, lat],
+          },
+          $maxDistance: radius,
+        },
+      },
+    }).exec();
+
+    return posts;
+  }
 }
