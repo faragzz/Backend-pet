@@ -11,7 +11,7 @@ export class PostsController {
     return this.postService.create(postData);
   }
 
-  @Delete('delete:id')
+  @Delete('delete/:id')
   async delete(@Param('id')id:string) {
     return this.postService.delete(id);
   }
