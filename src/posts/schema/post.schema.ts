@@ -10,7 +10,7 @@ export class Post {
   _id: Types.ObjectId;
 
   @Prop({ required: true, type: MongooseSchema.Types.ObjectId, ref: 'Pet' })
-  petData: Pet;
+  pet: Pet;
 
   @Prop({ required: true })
   title: string;
